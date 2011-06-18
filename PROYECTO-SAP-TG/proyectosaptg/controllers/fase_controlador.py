@@ -77,7 +77,11 @@ class FaseCrudConfig(CrudRestControllerConfig):
             'style="background-color: transparent; float:left; border:0; color: #286571; display: inline; margin: 0; padding: 0;"/>'\
             '</form>'\
             '<a class="itmes_link" href="../items/?fid='+pklist+'">Items</a> '\
+            '<br/>'\
             '<a class="lineas_link" href="../lineabases/?fid='+pklist+'">Linea Base</a> '\
+            '<br/>'\
+            '<a class="user_link" href="../users/?fid='+pklist+'">Usuarios_Asignados</a> '\
+            '<br/>'\
             '</div></div>'
             
             return value

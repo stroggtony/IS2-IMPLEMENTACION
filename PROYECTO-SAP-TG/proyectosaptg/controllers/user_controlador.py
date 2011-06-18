@@ -57,5 +57,39 @@ class UserCrudConfig(CrudRestControllerConfig):
     class table_filler_type(TableFiller):
         __entity__ = User
         __limit_fields__ = ['user_id', 'user_name','nombres_apellidos', 'email_address','created','groups']
+        
+        def __actions__(self, obj):
+            """Override this function to define how action links should be displayed for the given record."""
+            primary_fields = self.__provider__.get_primary_fields(self.__entity__)
+            pklist = '/'.join(map(lambda x: str(getattr(obj, x)), primary_fields))
+            
+            value =  '<div><div><a class="edit_link" href="'+pklist+'/edit" style="text-decoration:none">edit</a>'\
+            '</div><div>'\
+            '<form method="POST" action="'+pklist+'" class="button-to">'\
+            '<input type="hidden" name="_method" value="DELETE" />'\
+            '<input class="delete-button" onclick="return confirm(\'Are you sure?\');" value="delete" type="submit" '\
+            'style="background-color: transparent; float:left; border:0; color: #286571; display: inline; margin: 0; padding: 0;"/>'\
+            '</form>'\
+            '</div></div>'
+
+            return value
+
+        def _do_get_provider_count_and_objs(self, **kw):
+            limit = kw.get('limit', None)
+            offset = kw.get('offset', None)
+            order_by = kw.get('order_by', None)
+            desc = kw.get('desc', False)
+            if len(kw) > 0:
+                #se obtienen la lista de id's de roles que estan permitidos en la fase
+                id_rol = DBSession.query("group_id").from_statement("SELECT group_id FROM tg_fase_group WHERE fase_id=:idfase").params(idfase = int(kw['fid'])).all()
+                #for i in id_rol:
+                    #usuario_rol = DBSession.query("user_id").from_statement("SELECT user_id FROM tg_user_group WHERE group_id=:groupid").params(groupid = id_rol)
+                objs = DBSession.query(self.__entity__).all()
+            else:
+                objs = DBSession.query(self.__entity__).all()
+                
+            #count = len(objs)
+            #self.__count__ = count
+            return len(objs), objs
    
     new_form_type = UserRegistrationForm

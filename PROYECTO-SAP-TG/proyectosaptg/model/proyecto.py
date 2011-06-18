@@ -35,7 +35,7 @@ class Proyecto(DeclarativeBase):
     
     usuario_creador = Column(Unicode, nullable=False)
    
-	
+
     
     fases = relationship("Fase")
     
